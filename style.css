@@ -14,3 +14,6 @@
     color: black;
 }
 
+#answer-container {
+    display: flex;
+}

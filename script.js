@@ -1,89 +1,77 @@
-const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-const words = ['HELLO', 'TEST', 'HANGMAN', 'FOOTBALL'];
+const words = ['HELLO', 'TEST', 'HANGMAN', 'FOOTBALL', 'BANANA', 'GOAT', 'FISH'];
 
 window.onload = function () {
     // Choose a word from an array
     selectWord(words)
 
-    console.log(selectedWord)
+    console.log(answer)
 }
 
 // Selects a letter from onClick event
 function letterSelected(event) {
     console.log(`Chosen letter ${event.target.innerHTML}`)
     let selectedLetter = event.target.innerHTML
-    checkWord(selectedLetter)
-    displayLetter(selectedLetter)
+    checkForMatch(selectedLetter)
 }
-
-// variable that holds word selected from array
-let selectedWord;
 let answer;
+let counter = 0;
 
 function selectWord(words) {
     let selector = Math.floor(Math.random() * words.length)
-    selectedWord = words[selector]
+    answer = words[selector]
     renderWord();
 }
 
 function renderWord() {
-    //actual letter
+    // Extrapolates the letters from the answer
     let letters = []
-    for (let i = 0; i < selectedWord.length; i++) {
-        letters.push(selectedWord.charAt(i));
+    for (let i = 0; i < answer.length; i++) {
+        letters.push(answer.charAt(i));
     }
 
-    // letterTag elements
+    // adds the answer to the DOM but hides from page until correct letter is selected
     let letterTags = []
-    letters.map((letter, i )=> {
+    letters.map(letter => {
         let letterNode = document.createTextNode(letter)
         let letterTag = document.createElement('h1')
         letterTag.appendChild(letterNode)
-        letterTag.id = letterTag.textContent
-        letterTag.style.display = "none"
+        letterTag.className = letterTag.textContent
+        letterTag.style.visibility = "hidden"
         document.getElementById('answer-container').appendChild(letterTag)
         letterTags.push(letterTag)
     })
-
-    return letterTags;
 }
 
 function displayLetter(selectedLetter) {
-
-    for (let i = 0; i < selectedWord.length; i++) {
-        selectedWord.includes(selectedLetter) ? document.getElementById(selectedLetter).style.display = "block" : console.log('no')
+    for (let i = 0; i < answer.length; i++) {
+        answer.includes(selectedLetter) ? document.querySelectorAll(`.${selectedLetter}`).forEach(el => {
+            el.style.visibility = "visible"
+        }) : null
     }
 }
 
-
-function checkWord(letter) {
-    if (selectedWord.includes(letter)) {
-        console.log('Correct')
-        confirmChoice(letter)
+function checkForMatch(letter) {
+    if (answer.includes(letter)) {
         hideSelectedButton(letter)
-    } else {
-        console.log('Wrong letter')
+        displayLetter(letter)
     }
+
+    guessCounter()
+
 }
 
 function hideSelectedButton(letter) {
     let button = document.getElementById(`letter-${letter}`)
-    console.log(`Hide letter ${letter}`)
     button.style.display = "none";
+
+    console.log(`Hide letter ${letter}`)
 }
 
-function confirmChoice (letter) {
-    // const letterNode = document.createTextNode(letter)
-    // const letterTag = document.createElement('p').appendChild(letterNode)
-    // document.getElementById('answer-container').appendChild(letterTag)
+function guessCounter () {
+    counter += 1;
+    console.log(counter)
 
-    // if (selectWord().includes(letter)) {
-    //     console.log('works')
-    //
-    // }
-
-
-    // console.log('fadvsad' + selectWord(words))
+    if (counter === 6) {
+        alert('You Looses')
+    }
 }
-
-// have selectedWord hidden from view but Make each letter appear as choice is confirmed
